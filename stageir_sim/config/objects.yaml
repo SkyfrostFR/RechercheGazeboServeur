@@ -1,0 +1,44 @@
+# Test objects for the TIAGo Dual twin, spawned in Gazebo by spawn_objects.py.
+# Loaded under /stageir/objects: the Unity client reads the same list through
+# rosapi/get_param to draw them, and follows their poses on /gazebo/model_states.
+# Poses are in the Gazebo world frame (the robot starts at the origin, facing +x).
+#   shape: box (size [x, y, z]) | cylinder (radius, length) | sphere (radius)
+#   static: true = never moves (furniture); colour: [r, g, b] in 0..1
+#
+# Layout (torso at 0.20, see sim.launch): in the twin's home pose the finger pads of both
+# grippers span z 0.59..0.69 and reach 0.47 m ahead of the base. The table top (0.50) is
+# below them and its edge (x 0.65) beyond them: the base drives ~0.15 m forward to bring
+# the objects within reach. Each arm has a cylinder in front of it, grasped from the front.
+objects:
+  - name: table
+    shape: box
+    size: [0.4, 1.2, 0.5]
+    position: [0.85, 0.0, 0.25]
+    static: true
+    colour: [0.55, 0.40, 0.25]
+  - name: cylinder_red
+    shape: cylinder
+    radius: 0.025
+    length: 0.10
+    position: [0.75, 0.45, 0.55]
+    mass: 0.06
+    colour: [0.85, 0.1, 0.1]
+  - name: cylinder_blue
+    shape: cylinder
+    radius: 0.025
+    length: 0.10
+    position: [0.75, -0.45, 0.55]
+    mass: 0.06
+    colour: [0.1, 0.3, 0.9]
+  - name: cube_green
+    shape: box
+    size: [0.045, 0.045, 0.045]
+    position: [0.8, 0.15, 0.5225]
+    mass: 0.05
+    colour: [0.1, 0.7, 0.2]
+  - name: box_yellow
+    shape: box
+    size: [0.04, 0.04, 0.10]
+    position: [0.8, -0.15, 0.55]
+    mass: 0.05
+    colour: [0.95, 0.8, 0.1]

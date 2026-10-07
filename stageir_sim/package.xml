@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>stageir_sim</name>
+  <version>0.1.0</version>
+  <description>TIAGo Dual ROS 1 simulation glue for the Unity digital twin (rosbridge, velocity controllers, real-robot topic names).</description>
+  <maintainer email="guillaumefinotto0@gmail.com">Guillaume Finotto</maintainer>
+  <license>Apache-2.0</license>
+  <buildtool_depend>catkin</buildtool_depend>
+  <exec_depend>tiago_dual_gazebo</exec_depend>
+  <exec_depend>tiago_dual_controller_configuration</exec_depend>
+  <exec_depend>rosbridge_server</exec_depend>
+  <exec_depend>image_transport</exec_depend>
+  <exec_depend>cv_bridge</exec_depend>
+</package>

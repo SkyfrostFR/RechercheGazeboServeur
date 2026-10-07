@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!-- TIAGo Dual public simulation + what the Unity digital twin (ROS#) expects
+     from the real robot: rosbridge on :9090, stopped velocity controllers, and
+     the depth image under the real robot's topic and format. -->
+<launch>
+  <arg name="world" default="empty"/>
+  <arg name="gui" default="true"/>
+  <!-- Table and graspable objects of config/objects.yaml -->
+  <arg name="objects" default="true"/>
+  <!-- Torso height of the Unity twin, which has no torso joint: its torso_lift_link is
+       fixed 0.20 m above Gazebo's at torso 0 (same arm kinematics otherwise). -->
+  <arg name="torso" default="0.20"/>
+
+  <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch">
+    <arg name="port" value="9090"/>
+  </include>
+
+  <include file="$(find tiago_dual_gazebo)/launch/tiago_dual_gazebo.launch">
+    <arg name="public_sim" value="true"/>
+    <arg name="world" value="$(arg world)"/>
+    <arg name="gui" value="$(arg gui)"/>
+    <arg name="end_effector_left" value="pal-gripper"/>
+    <arg name="end_effector_right" value="pal-gripper"/>
+  </include>
+
+  <!-- Loaded stopped: TiagoDualArmRosSync starts them with switch_controller. -->
+  <include file="$(find tiago_dual_controller_configuration)/launch/forward_velocity_controllers.launch"/>
+
+  <!-- The real robot publishes /xtion/depth/image_rect_raw as 16UC1 millimetres
+       (TiagoDepthSubscriber decodes "16UC1; compressedDepth png"); Gazebo gives
+       32FC1 metres on /xtion/depth_registered/image_raw. -->
+  <node name="depth_to_mm" pkg="stageir_sim" type="depth_to_mm.py" output="screen">
+    <remap from="depth_in" to="/xtion/depth_registered/image_raw"/>
+    <remap from="depth_mm" to="/stageir/depth_mm"/>
+  </node>
+  <!-- image_transport publisher: adds /xtion/depth/image_rect_raw/compressedDepth -->
+  <node name="depth_republish" pkg="image_transport" type="republish"
+        args="raw in:=/stageir/depth_mm out:=/xtion/depth/image_rect_raw"/>
+  <node name="depth_info_relay" pkg="topic_tools" type="relay"
+        args="/xtion/depth_registered/camera_info /xtion/depth/camera_info"/>
+
+  <node name="set_torso" pkg="stageir_sim" type="set_torso.py" output="screen">
+    <param name="height" value="$(arg torso)"/>
+  </node>
+
+  <group if="$(arg objects)">
+    <!-- /stageir/objects: also read by the Unity client (rosapi/get_param) -->
+    <rosparam command="load" file="$(find stageir_sim)/config/objects.yaml" ns="stageir"/>
+    <node name="spawn_objects" pkg="stageir_sim" type="spawn_objects.py" output="screen">
+      <rosparam command="load" file="$(find stageir_sim)/config/objects.yaml"/>
+    </node>
+  </group>
+</launch>
