@@ -5,8 +5,8 @@
 # Needs a FRESH sim (pixi run ros1-sim; objects untouched, robot at the origin).
 # SKIP_BUILD=1 reuses the last build; SHOTS=<dir> saves side/top views at each phase.
 set -euo pipefail
-# This repo (GazeboRobotServer) sits next to the client checkout in StageIR:
-#   StageIR/ros1 (server)   StageIR/unity/TiagoClient (GazeboRobotClient)
+# This repo (RechercheGazeboServeur) sits next to the client checkout in StageIR:
+#   StageIR/ros1 (server)   StageIR/unity/TiagoClient (RechercheClientUnity)
 # TWIN_CLIENT=<path> points at the client elsewhere.
 SERVER="$(cd "$(dirname "$0")/.." && pwd)"
 CLIENT="${TWIN_CLIENT:-$SERVER/../unity/TiagoClient}"

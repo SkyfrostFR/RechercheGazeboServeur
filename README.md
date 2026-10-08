@@ -1,11 +1,11 @@
-# GazeboRobotServer — serveur Gazebo du jumeau TIAGo Dual
+# RechercheGazeboServeur — serveur Gazebo du jumeau TIAGo Dual
 
 Côté **serveur** de l'architecture client / serveur du jumeau numérique TIAGo Dual
 (TIAGo++). Le client Unity (VR, Quest 3) est le dépôt
-[GazeboRobotClient](https://github.com/SkyfrostFR/GazeboRobotClient).
+[RechercheClientUnity](https://github.com/SkyfrostFR/RechercheClientUnity).
 
 ```
- ┌──────── client (GazeboRobotClient) ────────┐        ┌──────── serveur (ce dépôt) ────────┐
+ ┌──────── client (RechercheClientUnity) ────────┐        ┌──────── serveur (ce dépôt) ────────┐
  │ Unity · scène TiagoClient · ROS#           │  WS    │ Docker · ROS 1 Noetic              │
  │ jumeau, IK, VR, pinces, conduite de base   │ ─────► │ rosbridge :9090                    │
  │ StreamingAssets/twin_server.json           │        │ Gazebo Classic · TIAGo Dual public │
