@@ -2,19 +2,19 @@
 # Automated check of the Gazebo world features of the client: test objects drawn, base
 # driven from the (scripted) sticks with the twin following it, and cylinder_red grasped
 # and lifted by the left arm (TwinWorldProbe.cs, -twinWorldProbe).
-# Needs a FRESH sim (pixi run ros1-sim; objects untouched, robot at the origin).
+# Needs a FRESH sim (pixi run sim; objects untouched, robot at the origin).
 # SKIP_BUILD=1 reuses the last build; SHOTS=<dir> saves side/top views at each phase.
 set -euo pipefail
-# This repo (RechercheGazeboServeur) sits next to the client checkout in StageIR:
-#   StageIR/ros1 (server)   StageIR/unity/TiagoClient (RechercheClientUnity)
+# This repo sits next to the client checkout:
+#   <dir>/RechercheGazeboServeur   <dir>/RechercheClientUnity
 # TWIN_CLIENT=<path> points at the client elsewhere.
 SERVER="$(cd "$(dirname "$0")/.." && pwd)"
-CLIENT="${TWIN_CLIENT:-$SERVER/../unity/TiagoClient}"
+CLIENT="${TWIN_CLIENT:-$SERVER/../RechercheClientUnity}"
 LIBDIR="$(dirname "$CLIENT")/lib"
 UNITY="${UNITY_EDITOR:-$HOME/Unity/Hub/Editor/6000.6.3f1/Editor/Unity}"
 LOGDIR="$(mktemp -d)"
 
-docker ps --format '{{.Names}}' | grep -qx tiago_dual_noetic || { echo "Start the sim first: ./run_sim.sh (or pixi run ros1-sim)" >&2; exit 1; }
+docker ps --format '{{.Names}}' | grep -qx tiago_dual_noetic || { echo "Start the sim first: pixi run sim" >&2; exit 1; }
 
 if [ "${SKIP_BUILD:-0}" != 1 ]; then
   echo "Building the Linux client..."

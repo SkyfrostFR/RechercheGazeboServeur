@@ -1,0 +1,14 @@
+[workspace]
+name = "RechercheGazeboServeur"
+description = "Serveur Gazebo (ROS 1 Noetic, Docker) du jumeau numérique TIAGo Dual"
+channels = ["conda-forge"]
+platforms = ["linux-64"]
+
+# Docker does the real work; pixi only gives the commands short, identical names.
+[tasks]
+build = { cmd = "docker build -t stageir/tiago-dual-noetic:latest .", description = "Construit l'image Docker (TIAGo Dual Noetic + rosbridge)" }
+sim = { cmd = "bash run_sim.sh", depends-on = ["build"], description = "Lance la simulation avec la fenêtre Gazebo (rosbridge :9090)" }
+sim-headless = { cmd = "bash run_sim.sh", env = { GUI = "false" }, depends-on = ["build"], description = "Lance la simulation sans fenêtre Gazebo" }
+stop = { cmd = "docker stop tiago_dual_noetic", description = "Arrête la simulation" }
+probe = { cmd = "bash scripts/twin_probe.sh", description = "Test auto : synchro des bras Unity <-> Gazebo (simulation lancée)" }
+world-probe = { cmd = "bash scripts/twin_world_probe.sh", description = "Test auto : objets, base et saisie (simulation fraîche)" }

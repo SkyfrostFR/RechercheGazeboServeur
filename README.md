@@ -19,27 +19,32 @@ TIAGo Dual. Le client Unity est le dépôt
 |---|---|
 | `Dockerfile` | Image ROS 1 Noetic avec la simulation PAL du TIAGo Dual et rosbridge |
 | `run_sim.sh` | Lance la simulation (rosbridge sur le port 9090) |
+| `pixi.toml` | Commandes d'installation et de lancement |
 | `stageir_sim/` | Paquet ROS : launch, objets à saisir, réglages attendus par le client |
 
 ## Installation
 
-Il faut un PC Linux avec **Docker** et un affichage graphique (pour la fenêtre Gazebo).
+Il faut un PC Linux avec **Docker**, **[pixi](https://pixi.sh)** et un affichage
+graphique (pour la fenêtre Gazebo).
 
 ```bash
 git clone https://github.com/SkyfrostFR/RechercheGazeboServeur.git
 cd RechercheGazeboServeur
-docker build -t stageir/tiago-dual-noetic:latest .
+pixi run build             # construit l'image Docker (long la première fois)
 ```
 
 ## Lancer
 
 ```bash
-./run_sim.sh               # avec la fenêtre Gazebo
-GUI=false ./run_sim.sh     # sans fenêtre
+pixi run sim               # avec la fenêtre Gazebo
+pixi run sim-headless      # sans fenêtre
+pixi run stop              # arrête la simulation
 ```
 
-Arrêt : `docker stop tiago_dual_noetic`.
+`pixi run sim` construit l'image si elle manque. Le client se connecte ensuite à
+`ws://<adresse IP de ce PC>:9090`.
 
-Le client se connecte ensuite à `ws://<adresse IP de ce PC>:9090`.
+`pixi task list` affiche toutes les commandes, dont les tests automatiques
+(`probe`, `world-probe`), qui attendent le client cloné à côté de ce dépôt.
 
 Attention : rosbridge n'a pas d'authentification. À utiliser sur un réseau de confiance.

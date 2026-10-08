@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
 # Automated check of the client/server twin: both TIAGo Dual arms in sync, both ways.
-# Needs the ROS 1 sim running (pixi run ros1-sim). Builds the Linux client, runs it with
+# Needs the ROS 1 sim running (pixi run sim). Builds the Linux client, runs it with
 # -twinProbe (TwinSyncProbe.cs), moves Gazebo's arms from ROS during the EXTERNAL phase,
 # and prints the PASS/FAIL line. SKIP_BUILD=1 reuses the last build.
 set -euo pipefail
-# This repo (RechercheGazeboServeur) sits next to the client checkout in StageIR:
-#   StageIR/ros1 (server)   StageIR/unity/TiagoClient (RechercheClientUnity)
+# This repo sits next to the client checkout:
+#   <dir>/RechercheGazeboServeur   <dir>/RechercheClientUnity
 # TWIN_CLIENT=<path> points at the client elsewhere.
 SERVER="$(cd "$(dirname "$0")/.." && pwd)"
-CLIENT="${TWIN_CLIENT:-$SERVER/../unity/TiagoClient}"
+CLIENT="${TWIN_CLIENT:-$SERVER/../RechercheClientUnity}"
 LIBDIR="$(dirname "$CLIENT")/lib"
 UNITY="${UNITY_EDITOR:-$HOME/Unity/Hub/Editor/6000.6.3f1/Editor/Unity}"
 LOGDIR="$(mktemp -d)"
 NAME="tiago_dual_noetic"
 
-docker ps --format '{{.Names}}' | grep -qx "$NAME" || { echo "Start the sim first: ./run_sim.sh (or pixi run ros1-sim)" >&2; exit 1; }
+docker ps --format '{{.Names}}' | grep -qx "$NAME" || { echo "Start the sim first: pixi run sim" >&2; exit 1; }
 
 if [ "${SKIP_BUILD:-0}" != 1 ]; then
   echo "Building the Linux client..."
